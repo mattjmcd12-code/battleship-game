@@ -1,0 +1,416 @@
+/* ===== Theme ===== */
+:root {
+    --bg: #0b1520;
+    --panel: #122131;
+    --panel-border: #1f3448;
+    --grid-line: #1e3146;
+    --cell: #0f2033;
+    --cell-hover: #1a324d;
+    --ship: #3b82f6;
+    --ship-placing: #60a5fa;
+    --ship-invalid: #f87171;
+    --hit: #ef4444;
+    --miss: #cbd5e1;
+    --sunk: #7f1d1d;
+    --text: #e6eef7;
+    --muted: #93a4b8;
+    --accent: #22d3ee;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    min-height: 100vh;
+}
+
+header {
+    text-align: center;
+    padding: 24px 16px 8px;
+}
+
+header h1 {
+    margin: 0 0 8px;
+    letter-spacing: 2px;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    color: var(--accent);
+}
+
+.status {
+    font-size: 1.05rem;
+    color: var(--text);
+    min-height: 1.4em;
+}
+
+.turn-indicator {
+    margin-top: 4px;
+    color: var(--muted);
+    font-style: italic;
+    min-height: 1.2em;
+}
+
+.action-log {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    margin-top: 10px;
+}
+
+.action-line {
+    font-size: 0.95rem;
+    min-height: 1.3em;
+    color: var(--muted);
+    padding: 2px 10px;
+    border-radius: 4px;
+}
+
+.action-line.player::before {
+    content: "You: ";
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.action-line.enemy::before {
+    content: "Enemy: ";
+    color: #f87171;
+    font-weight: 600;
+}
+
+.action-line:empty::before {
+    content: "";
+}
+
+.action-line.hit { color: #fca5a5; }
+.action-line.miss { color: var(--muted); }
+.action-line.sunk { color: #fecaca; font-weight: 600; }
+
+main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ===== Setup Panel ===== */
+.panel {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 10px;
+    padding: 16px 20px;
+}
+
+.panel h2 {
+    margin: 0 0 8px;
+    font-size: 1.1rem;
+    color: var(--accent);
+}
+
+.hint {
+    margin: 0 0 12px;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.setup-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.ship-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.ship-option {
+    background: var(--cell);
+    border: 1px solid var(--panel-border);
+    color: var(--text);
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 120ms ease, border-color 120ms ease;
+}
+
+.ship-option:hover:not(.placed):not(:disabled) {
+    background: var(--cell-hover);
+}
+
+.ship-option.selected {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.25);
+}
+
+.ship-option.placed {
+    opacity: 0.45;
+    cursor: not-allowed;
+    text-decoration: line-through;
+}
+
+.setup-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+button {
+    background: var(--cell);
+    color: var(--text);
+    border: 1px solid var(--panel-border);
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 120ms ease, border-color 120ms ease;
+}
+
+button:hover:not(:disabled) {
+    background: var(--cell-hover);
+    border-color: var(--accent);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#start-btn:not(:disabled) {
+    background: var(--accent);
+    color: #062028;
+    border-color: var(--accent);
+    font-weight: 600;
+}
+
+/* ===== Boards ===== */
+.boards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.board-wrapper {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.board-wrapper h2 {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.board {
+    --cell-size: min(40px, calc((100vw - 96px) / 22));
+    display: grid;
+    grid-template-columns: repeat(10, var(--cell-size));
+    grid-template-rows: repeat(10, var(--cell-size));
+    gap: 2px;
+    background: var(--grid-line);
+    padding: 2px;
+    border-radius: 4px;
+    user-select: none;
+}
+
+.cell {
+    background: var(--cell);
+    width: var(--cell-size);
+    height: var(--cell-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(var(--cell-size) * 0.5);
+    font-weight: bold;
+    transition: background 100ms ease;
+}
+
+.cell.interactive {
+    cursor: crosshair;
+}
+
+.cell.interactive:hover {
+    background: var(--cell-hover);
+}
+
+/* ===== Player-fleet ship styling =====
+   Each ship cell renders a gradient "hull segment" via ::before, with bow/stern
+   cells tapered into a capsule silhouette. One cell per ship also gets a
+   small centered turret via ::after. All CSS-only. */
+.cell.ship {
+    background: transparent;
+    position: relative;
+}
+
+.cell.ship::before {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    background: linear-gradient(180deg, #93c5fd 0%, #3b82f6 55%, #1e3a8a 100%);
+    border: 1px solid #0b1a3a;
+    border-radius: 2px;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        inset 0 -2px 2px rgba(0, 0, 0, 0.28);
+}
+
+/* Horizontal bow / stern taper */
+.cell.ship.ship-h.ship-bow::before {
+    border-top-left-radius: 70% 55%;
+    border-bottom-left-radius: 70% 55%;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: none;
+}
+.cell.ship.ship-h.ship-stern::before {
+    border-top-right-radius: 45% 55%;
+    border-bottom-right-radius: 45% 55%;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: none;
+}
+.cell.ship.ship-h.ship-mid::before {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+}
+
+/* Vertical bow / stern taper */
+.cell.ship.ship-v.ship-bow::before {
+    border-top-left-radius: 55% 70%;
+    border-top-right-radius: 55% 70%;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: none;
+}
+.cell.ship.ship-v.ship-stern::before {
+    border-bottom-left-radius: 55% 45%;
+    border-bottom-right-radius: 55% 45%;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-top: none;
+}
+.cell.ship.ship-v.ship-mid::before {
+    border-radius: 0;
+    border-top: none;
+    border-bottom: none;
+}
+
+/* Deck feature: a small turret / bridge dome on one cell per ship. */
+.cell.ship.ship-deck::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 42%;
+    height: 42%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #e5e7eb 0%, #9ca3af 60%, #4b5563 100%);
+    border: 1px solid #0b1a3a;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+.cell.ship-preview {
+    background: var(--ship-placing);
+}
+
+.cell.preview-invalid {
+    background: var(--ship-invalid);
+}
+
+.cell.hit {
+    background: var(--hit);
+    color: #fff;
+}
+
+.cell.miss {
+    background: var(--miss);
+    color: #0b1520;
+}
+
+.cell.sunk {
+    background: var(--sunk);
+    color: #fff;
+}
+
+.cell.hit::after,
+.cell.sunk::after {
+    content: "✕";
+}
+
+.cell.miss::after {
+    content: "•";
+}
+
+/* ===== Game controls & Legend ===== */
+.game-controls {
+    display: flex;
+    justify-content: center;
+}
+
+#reset-btn {
+    min-width: 160px;
+}
+
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    color: var(--muted);
+    font-size: 0.9rem;
+    padding-bottom: 24px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.swatch {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 1px solid var(--panel-border);
+}
+
+.swatch.ship { background: var(--ship); }
+.swatch.hit { background: var(--hit); }
+.swatch.miss { background: var(--miss); }
+.swatch.sunk { background: var(--sunk); }
+
+/* ===== Game-over overlay note ===== */
+.status.win { color: #4ade80; font-weight: 600; }
+.status.lose { color: #f87171; font-weight: 600; }
+
+/* ===== Responsive ===== */
+@media (max-width: 720px) {
+    .boards {
+        grid-template-columns: 1fr;
+    }
+    .board {
+        --cell-size: min(36px, calc((100vw - 56px) / 11));
+    }
+}
