@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Battleship</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <header>
+        <h1>Battleship</h1>
+        <div id="status" class="status">Place your ships to begin.</div>
+        <div id="turn-indicator" class="turn-indicator" aria-live="polite"></div>
+        <div class="action-log">
+            <div id="player-action" class="action-line player" aria-live="polite"></div>
+            <div id="enemy-action" class="action-line enemy" aria-live="polite"></div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Setup phase controls -->
+        <section id="setup-panel" class="panel">
+            <h2>Place Your Fleet</h2>
+            <p class="hint">
+                Click a ship, then click a cell on your board to place it.
+                Use the <strong>Rotate</strong> button (or press <kbd>R</kbd>) to toggle orientation.
+            </p>
+            <div class="setup-controls">
+                <div id="ship-list" class="ship-list"></div>
+                <div class="setup-buttons">
+                    <button id="rotate-btn" type="button">Rotate: Horizontal</button>
+                    <button id="random-btn" type="button">Random Placement</button>
+                    <button id="clear-btn" type="button">Clear Board</button>
+                    <button id="start-btn" type="button" disabled>Start Game</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Boards -->
+        <section class="boards">
+            <div class="board-wrapper">
+                <h2>Your Waters</h2>
+                <div id="player-board" class="board" aria-label="Player board"></div>
+            </div>
+            <div class="board-wrapper">
+                <h2>Enemy Waters</h2>
+                <div id="ai-board" class="board" aria-label="Enemy board"></div>
+            </div>
+        </section>
+
+        <!-- Game controls -->
+        <section class="game-controls">
+            <button id="reset-btn" type="button">New Game</button>
+        </section>
+
+        <!-- Legend -->
+        <section class="legend" aria-label="Legend">
+            <span class="legend-item"><span class="swatch ship"></span>Ship</span>
+            <span class="legend-item"><span class="swatch hit"></span>Hit</span>
+            <span class="legend-item"><span class="swatch miss"></span>Miss</span>
+            <span class="legend-item"><span class="swatch sunk"></span>Sunk</span>
+        </section>
+    </main>
+
+    <script src="game.js"></script>
+</body>
+</html>
