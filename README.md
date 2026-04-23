@@ -6,7 +6,7 @@ A browser-based implementation of the classic Battleship game. Play against an A
 
 ## Play
 
-- **Hosted:** enable GitHub Pages in repo settings (branch `main`, root), then visit `https://mattjmcd12-code.github.io/battleship-game/`.
+- **Hosted:** Visit `https://mattjmcd12-code.github.io/battleship-game/`.
 - **Local:** clone the repo and open `index.html` directly in your browser — no server, no build step, no dependencies.
 
 ## Features
