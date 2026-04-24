@@ -40,10 +40,3 @@ The AI has two modes:
 
 Implementation lives in `game.js` — see `pickHuntCell`, `queueTargetsAroundHit`, and `aiTurn`.
 
-## Development
-
-There is nothing to build. Edit the files and refresh the browser.
-
-## License
-
-MIT — do whatever you want with it.
